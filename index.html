@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Väder App</title>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300&family=Sarala&display=swap');
+    *{
+        font-family: 'Martian Mono', monospace;
+    }
+</style>
+<body class="bg-dark">
+    <section id="everything" class="d-flex flex-column align-items-center">
+        <h1 class="m-5 text-light">Väder App</h1>
+        <div class="card">
+            <div class="card-body d-flex justify-content-center">
+                <input id="textBox" placeholder="Skriv in en Stad" type="text">
+                <button type="button" class="btn btn-dark ms-2" onclick="findCity()">Sök</button>
+            </div>
+        </div>
+    </section>
+  <script>
+    function findCity() {
+
+        fetch('https://api.openweathermap.org/data/2.5/weather?q=' + document.getElementById("textBox").value + '&units=metric&appid=dbf87de7264865416362ce390de95c52')
+            .then(response => response.json())
+            .then(jsonData => {
+                generateCard(jsonData);
+            })
+    }
+
+    function generateCard(jsonData) {
+      // Skaper element i html med hjälp av följande js
+      var ALL = document.getElementById("everything");
+      var con = document.createElement("div");
+      var firstDiv = document.createElement("div");
+      var image = document.createElement('img');
+      var secondDiv = document.createElement("div");
+      var title = document.createElement('h3');
+      var description = document.createElement('p');
+      var temp = document.createElement('h3')
+      var textBox = document.getElementById("textBox").value;
+      var line = document.createElement('hr')
+      var AMinT = document.createElement('h5');
+      var AMaxT = document.createElement('h5');
+      var line2 = document.createElement('hr')
+      var pressure = document.createElement('p');
+      var humidity = document.createElement('p');
+
+
+      // Lägger till atributer för första diven 
+      firstDiv.setAttribute('Class','card');
+      firstDiv.setAttribute('Style','width: 14rem');
+
+      image.setAttribute('Class','card-img-top');
+      image.setAttribute('src','https://openweathermap.org/img/wn/'+ jsonData.weather[0].icon +'@4x.png');
+      title.setAttribute('Class','card-title');
+      title.textContent = jsonData.name;
+      description.setAttribute('Class','card-text');
+      description.textContent = jsonData.weather[0].description.charAt(0).toUpperCase() + jsonData.weather[0].description.slice(1);
+      temp.setAttribute('Class','card-title');
+      temp.textContent = jsonData.main.temp + ' C°';
+      AMinT.textContent = '↓' + jsonData.main.temp_min + ' C°';
+      AMinT.setAttribute('Class','text-primary');
+      AMaxT.textContent = '↑' + jsonData.main.temp_max + ' C°';
+      AMaxT.setAttribute('Class','text-danger');
+      pressure.textContent = 'Pressure - ' + jsonData.main.pressure + ' mbar';
+      humidity.textContent = 'Humidity - ' + jsonData.main.humidity + '%';
+
+
+      // Läger till img och div in i den här diven
+      firstDiv.appendChild(image);
+      firstDiv.appendChild(secondDiv);
+
+      secondDiv.setAttribute('Class','card-body');
+      secondDiv.appendChild(title);
+      secondDiv.appendChild(description);
+      secondDiv.appendChild(temp);
+      secondDiv.appendChild(line);
+      secondDiv.appendChild(AMinT);
+      secondDiv.appendChild(AMaxT);
+      secondDiv.appendChild(line2);
+      secondDiv.appendChild(pressure);
+      secondDiv.appendChild(humidity);
+    
+
+      con.setAttribute('Class','text-center mt-4 d-flex flex-column align-items-center');
+      con.appendChild(firstDiv);
+
+      ALL.appendChild(con);
+    }
+  </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
